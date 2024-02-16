@@ -121,6 +121,12 @@ class MainActivity : AppCompatActivity() {
         // 지정한 이름으로 있는 Fragment를 BackStack에서 제거한다.
         supportFragmentManager.popBackStack(name.str, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
+    // RecyclerView 갱신 메서드
+    fun reloadRecyclerView(){
+        if(newFragment is MainFragment){
+            (newFragment as MainFragment).reloadRecyclerView()
+        }
+    }
 }
 
 enum class FragmentName(var str:String){

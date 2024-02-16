@@ -16,11 +16,15 @@ class MainFragment : Fragment() {
     lateinit var fragmentMainBinding: FragmentMainBinding
     lateinit var mainActivity: MainActivity
 
+    //정보를 담을 객체 생성
+    lateinit var memoList:MutableList<Trip>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         fragmentMainBinding = FragmentMainBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
+        saveData()
         setView()
         setEvent()
         setToolBar()
@@ -46,6 +50,10 @@ class MainFragment : Fragment() {
                 }
             }
         }
+    }
+    fun saveData(){
+        memoList = MemoDAO.selectAllMemo(mainActivity)
+
     }
 
     //floatButton클릭
@@ -94,22 +102,35 @@ class MainFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return 30
+            return memoList.size
         }
 
         override fun onBindViewHolder(holder: ViewHolderClass, position: Int) {
-            holder.rowMainBinding.resultTextView.text = "제목"
-            holder.rowMainBinding.resultImage.setImageResource(R.drawable.star_gh)
+            var memo = memoList[position]
+            holder.rowMainBinding.resultTextView.text = "제목 : ${memoList[position].title}"
+            when(memo.important){
+                0 -> holder.rowMainBinding.resultImage.setImageResource(R.drawable.star_hjhj)
+            }
             //클릭했을떄
             holder.rowMainBinding.root.setOnClickListener {
                 //객체를 생성해준다
                 var bottomSheetFragment = BottomSheetFragment()
 
                 //position번쨰 추출
+                var sheetBundle = Bundle()
+                sheetBundle.putInt("mainidx", memoList[position].idx)
+                bottomSheetFragment.arguments = sheetBundle
 
                 bottomSheetFragment.show(mainActivity.supportFragmentManager, "BottomSheet")
+
             }
         }
+    }
+    fun reloadRecyclerView(){
+        //데이터를 읽어온다
+        memoList = MemoDAO.selectAllMemo(mainActivity)
+        //RecyclerView를 갱신한다
+        fragmentMainBinding.recyclerview.adapter?.notifyDataSetChanged()
     }
 
 

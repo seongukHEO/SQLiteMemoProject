@@ -39,8 +39,18 @@ class ModifyFragment : Fragment() {
     //정보를 받아와서 보여준다
     fun initView(){
         fragmentModifyBinding.apply {
-            titlemodifyText.setText("허서우")
-            textModifyContents.setText("아아아아아")
+            var memo = arguments?.getInt("idx")
+            if (memo != null){
+                var memoModel = MemoDAO.selctOneMemo(mainActivity, memo)
+                titlemodifyText.setText("${memoModel.title}")
+                no.setText("${memoModel.dateTime}")
+                textModifyContents.setText("${memoModel.contents}")
+                when(memoModel.important){
+                    0 -> checkBox2.isChecked = true
+                    1 -> checkBox2.isChecked = false
+                }
+            }
+
         }
 
     }
@@ -49,6 +59,13 @@ class ModifyFragment : Fragment() {
     fun setEvent(){
         fragmentModifyBinding.apply {
             medifyButton.setOnClickListener {
+                var title = titlemodifyText.text.toString()
+                var contents = textModifyContents.text.toString()
+                var important = if (checkBox2.isChecked){
+                    Important.IMPORTANT_OK
+                }else{
+                    Important.IMPORTANT_NO
+                }
 
                 mainActivity.replaceFragment(FragmentName.MAIN_FRAGMENT, true, true, null)
             }

@@ -1,30 +1,33 @@
 package kr.co.lion.android01.newmemoproject_seonguk
 
+import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import kr.co.lion.android01.newmemoproject_seonguk.databinding.FragmentInputBinding
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.time.LocalDate
 
 class InputFragment : Fragment() {
 
     lateinit var fragmentInputBinding: FragmentInputBinding
     lateinit var mainActivity: MainActivity
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         fragmentInputBinding = FragmentInputBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
         setToolBar()
-        getData()
+
         return fragmentInputBinding.root
     }
     //툴바 구성
+    @RequiresApi(Build.VERSION_CODES.O)
     fun setToolBar(){
         fragmentInputBinding.apply {
             //툴바부터
@@ -46,7 +49,7 @@ class InputFragment : Fragment() {
                 setOnMenuItemClickListener {
                     when(it.itemId){
                         R.id.add_menu -> {
-                            mainActivity.removeFragment(FragmentName.INPUT_FRAGMENT)
+                            checkOK()
                         }
                     }
                     true
@@ -56,6 +59,7 @@ class InputFragment : Fragment() {
     }
 
     //입력을 받는다
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getData(){
         fragmentInputBinding.apply {
             var title = titleTextEdit.text.toString()
@@ -65,19 +69,42 @@ class InputFragment : Fragment() {
             }else{
                 Important.IMPORTANT_NO.num
             }
-
-            //시간을 구해준다
-            var sdf = SimpleDateFormat("yyyy-mm-dd", Locale.getDefault())
-            var now = sdf.format(Date())
+            var dateTime = LocalDate.now().toString()
 
 
-            var memoList = Trip(0, title, contents, important, now)
+
+            var memoList = Trip(0, title, contents, important, dateTime)
             //저장해준다
             MemoDAO.insertMemo(mainActivity, memoList)
         }
 
     }
-
+    //유효성 검사
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun checkOK(){
+        fragmentInputBinding.apply {
+            var title = titleTextEdit.text.toString()
+            var contents = contentsTextEdit.text.toString()
+            if (title.trim().isEmpty()){
+                enum.showDiaLog(mainActivity, "제목 입력 오류", "제목을 입력해주세요"){ dialogInterface: DialogInterface, i: Int ->
+                    enum.showSoftInput(titleTextEdit, mainActivity)
+                }
+                return
+            }else{
+                enum.hideSoftInput(mainActivity)
+            }
+            if (contents.trim().isEmpty()){
+                enum.showDiaLog(mainActivity, "내용 입력 오류", "내용을 입력해주세요"){ dialogInterface: DialogInterface, i: Int ->
+                    enum.showSoftInput(contentsTextEdit, mainActivity)
+                }
+                return
+            }else{
+                enum.hideSoftInput(mainActivity)
+            }
+        }
+        getData()
+        mainActivity.removeFragment(FragmentName.INPUT_FRAGMENT)
+    }
 
 }
 

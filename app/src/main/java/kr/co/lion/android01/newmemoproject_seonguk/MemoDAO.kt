@@ -9,7 +9,7 @@ class MemoDAO {
     companion object{
 
         //select one
-        fun selctOneMemo(context: Context, idx: Int){
+        fun selctOneMemo(context: Context, idx: Int): Trip{
             //쿼리문
             var sql = """select idx, title, contents, important, dateTime
                 |from MemoTable
@@ -44,13 +44,16 @@ class MemoDAO {
             //객체에 데이터를 담아준다
             var memoList = Trip(idx, title, contents, important, dateTime)
 
+
+
             //데이터를 닫아준다
             dbHelper.close()
+            return memoList
         }
 
         //select All
         fun selectAllMemo(context: Context): MutableList<Trip>{
-            var sql = """select idx, title, contents, important
+            var sql = """select idx, title, contents, important, dateTime
                 |from MemoTable
                 |order by idx desc
             """.trimMargin()
@@ -92,9 +95,9 @@ class MemoDAO {
                 |values(?, ?, ?, ?)
             """.trimMargin()
 
-            //시간을 구해준다
-            var sdf = SimpleDateFormat("yyyy-mm-dd", Locale.getDefault())
-            var now = sdf.format(Date())
+//            //시간을 구해준다
+//            var sdf = SimpleDateFormat("yyyy-mm-dd", Locale.getDefault())
+//            var now = sdf.format(Date())
 
             //?에 들어갈 값을 구한다
             var args = arrayOf(trip.title, trip.contents, trip.important, trip.dateTime)
@@ -113,7 +116,7 @@ class MemoDAO {
             """.trimMargin()
 
             //?에 들어갈 값을 구해준다
-            var args = arrayOf(trip.title, trip.contents, trip.important, trip.dateTime, trip.type)
+            var args = arrayOf(trip.title, trip.contents, trip.important, trip.dateTime, trip.idx)
             //쿼리 실행
             var dbHelper = DBHelper(context)
             dbHelper.writableDatabase.execSQL(sql, args)
