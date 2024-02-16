@@ -47,11 +47,11 @@ class MainActivity : AppCompatActivity() {
             FragmentName.INPUT_FRAGMENT -> {
                 newFragment = InputFragment()
             }
-            FragmentName.INFO_FRAGMENT -> {
-                newFragment = InfoFragment()
-            }
             FragmentName.BOTTOM_SHEET_FRAGMENT -> {
                 newFragment = BottomSheetFragment()
+            }
+            FragmentName.MODIFY_FRAGMENT -> {
+                newFragment = ModifyFragment()
             }
         }
 
@@ -126,8 +126,8 @@ class MainActivity : AppCompatActivity() {
 enum class FragmentName(var str:String){
     MAIN_FRAGMENT("MainFragment"),
     INPUT_FRAGMENT("InputFragment"),
-    INFO_FRAGMENT("InfoFragment"),
-    BOTTOM_SHEET_FRAGMENT("BottomSheetFragment")
+    BOTTOM_SHEET_FRAGMENT("BottomSheetFragment"),
+    MODIFY_FRAGMENT("ModifyFragment")
 }
 
 enum class Important(var num:Int){

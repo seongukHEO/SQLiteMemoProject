@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.divider.MaterialDividerItemDecoration
 import kr.co.lion.android01.newmemoproject_seonguk.databinding.FragmentMainBinding
 import kr.co.lion.android01.newmemoproject_seonguk.databinding.RowMainBinding
 
@@ -19,7 +21,10 @@ class MainFragment : Fragment() {
         // Inflate the layout for this fragment
         fragmentMainBinding = FragmentMainBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        setView()
+        setEvent()
+        setToolBar()
+        return fragmentMainBinding.root
     }
     //툴바 설정
     fun setToolBar(){
@@ -54,6 +59,15 @@ class MainFragment : Fragment() {
 
     //view설정
     fun setView(){
+        fragmentMainBinding.apply {
+            recyclerview.apply {
+                adapter = ReCyclerViewAdapter()
+                layoutManager = LinearLayoutManager(mainActivity)
+                //데코
+                var deco = MaterialDividerItemDecoration(mainActivity, MaterialDividerItemDecoration.VERTICAL)
+                addItemDecoration(deco)
+            }
+        }
 
     }
     //어댑터 클래스
@@ -64,6 +78,12 @@ class MainFragment : Fragment() {
             var rowMainBinding:RowMainBinding
             init {
                 this.rowMainBinding = rowMainBinding
+
+                //가로 세로 길이 설정
+                this.rowMainBinding.root.layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
             }
         }
 
@@ -80,6 +100,15 @@ class MainFragment : Fragment() {
         override fun onBindViewHolder(holder: ViewHolderClass, position: Int) {
             holder.rowMainBinding.resultTextView.text = "제목"
             holder.rowMainBinding.resultImage.setImageResource(R.drawable.star_gh)
+            //클릭했을떄
+            holder.rowMainBinding.root.setOnClickListener {
+                //객체를 생성해준다
+                var bottomSheetFragment = BottomSheetFragment()
+
+                //position번쨰 추출
+
+                bottomSheetFragment.show(mainActivity.supportFragmentManager, "BottomSheet")
+            }
         }
     }
 

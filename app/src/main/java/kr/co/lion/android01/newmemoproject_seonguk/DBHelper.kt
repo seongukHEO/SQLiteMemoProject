@@ -11,7 +11,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "Test.db", null, 1)
             |(idx integer primary key autoincrement,
             |title text not null,
             |contents text not null,
-            |important integer default 0)
+            |important integer not null,
+            |dateTime text not null)
         """.trimMargin()
         db?.execSQL(sql)
     }

@@ -5,55 +5,87 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kr.co.lion.android01.newmemoproject_seonguk.databinding.FragmentModifyBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ModifyFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ModifyFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    lateinit var fragmentModifyBinding: FragmentModifyBinding
+    lateinit var mainActivity: MainActivity
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        // Inflate the layout for this fragment
+        fragmentModifyBinding = FragmentModifyBinding.inflate(layoutInflater)
+        mainActivity = activity as MainActivity
+        setToolBar()
+        initView()
+        setEvent()
+        return fragmentModifyBinding.root
+    }
+    //툴바 설정
+    fun setToolBar(){
+        fragmentModifyBinding.apply {
+            materialToolbar6.apply {
+                title = "ModifyMemo"
+                //아이콘
+                setNavigationIcon(R.drawable.arrow_back_24px)
+                //클릭
+                setNavigationOnClickListener {
+                    mainActivity.removeFragment(FragmentName.MODIFY_FRAGMENT)
+                }
+            }
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_modify, container, false)
+    //정보를 받아와서 보여준다
+    fun initView(){
+        fragmentModifyBinding.apply {
+            titlemodifyText.setText("허서우")
+            textModifyContents.setText("아아아아아")
+        }
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ModifyFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ModifyFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    //출력
+    fun setEvent(){
+        fragmentModifyBinding.apply {
+            medifyButton.setOnClickListener {
+
+                mainActivity.replaceFragment(FragmentName.MAIN_FRAGMENT, true, true, null)
             }
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

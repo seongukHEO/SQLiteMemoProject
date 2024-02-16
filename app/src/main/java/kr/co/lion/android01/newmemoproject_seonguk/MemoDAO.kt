@@ -97,7 +97,7 @@ class MemoDAO {
             var now = sdf.format(Date())
 
             //?에 들어갈 값을 구한다
-            var args = arrayOf(trip.title, trip.contents, trip.important, now)
+            var args = arrayOf(trip.title, trip.contents, trip.important, trip.dateTime)
 
             //쿼리 실행
             var dbHelper = DBHelper(context)
