@@ -127,6 +127,7 @@ class MainActivity : AppCompatActivity() {
             (newFragment as MainFragment).reloadRecyclerView()
         }
     }
+
 }
 
 enum class FragmentName(var str:String){

@@ -15,6 +15,12 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
     <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp" />
+
+    <TextView
         android:id="@+id/contentsTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +30,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="70dp"
         android:orientation="horizontal">
 
         <Button

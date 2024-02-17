@@ -68,8 +68,9 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val memoModal = MemoDAO.selctOneMemo(mainActivity, memoIdx)
 
         fragmentBottomSheetBinding.apply {
-            titleTextView.text = memoModal.title
-            contentsTextView.text = memoModal.contents
+            titleTextView.text = "제목 : ${memoModal.title}"
+            timeTextView.text = "작성 날짜 : ${memoModal.dateTime}"
+            contentsTextView.text = "내용 : ${memoModal.contents}"
         }
     }
 }

@@ -1,6 +1,7 @@
 package kr.co.lion.android01.newmemoproject_seonguk
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +29,13 @@ class MainFragment : Fragment() {
         setView()
         setEvent()
         setToolBar()
+        //changeData()
         return fragmentMainBinding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fragmentMainBinding.recyclerview.adapter?.notifyDataSetChanged()
     }
     //툴바 설정
     fun setToolBar(){
@@ -78,6 +85,16 @@ class MainFragment : Fragment() {
         }
 
     }
+//    fun changeData(){
+//        var memo2 = arguments?.getInt("idx")
+//        if (memo2 != null){
+//            var memoModel = MemoDAO.selctOneMemo(mainActivity, memo2)
+//            memoList.add(memoModel)
+//            Log.e("test123", "${memoModel.title}")
+//
+//        }
+//    }
+
     //어댑터 클래스
     inner class ReCyclerViewAdapter:RecyclerView.Adapter<ReCyclerViewAdapter.ViewHolderClass>(){
 
@@ -107,6 +124,7 @@ class MainFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolderClass, position: Int) {
             var memo = memoList[position]
+            Log.e("test123", "${memo.title}")
             holder.rowMainBinding.resultTextView.text = "제목 : ${memoList[position].title}"
             when(memo.important){
                 0 -> holder.rowMainBinding.resultImage.setImageResource(R.drawable.star_hjhj)
@@ -122,6 +140,7 @@ class MainFragment : Fragment() {
                 bottomSheetFragment.arguments = sheetBundle
 
                 bottomSheetFragment.show(mainActivity.supportFragmentManager, "BottomSheet")
+                //Log.e("test123", "${memo.title}")
 
             }
         }
@@ -132,6 +151,9 @@ class MainFragment : Fragment() {
         //RecyclerView를 갱신한다
         fragmentMainBinding.recyclerview.adapter?.notifyDataSetChanged()
     }
+
+
+
 
 
 }
