@@ -1,5 +1,6 @@
 package kr.co.lion.android01.newmemoproject_seonguk
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import kr.co.lion.android01.newmemoproject_seonguk.databinding.FragmentMainBinding
 import kr.co.lion.android01.newmemoproject_seonguk.databinding.RowMainBinding
@@ -19,6 +21,12 @@ class MainFragment : Fragment() {
 
     //정보를 담을 객체 생성
     lateinit var memoList:MutableList<Trip>
+
+
+
+
+    //필터
+    var filterDiaLog = showFilterDiaLog.FILTER_TYPE_ALL
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -49,6 +57,7 @@ class MainFragment : Fragment() {
                 setOnMenuItemClickListener {
                     when(it.itemId){
                         R.id.filter_menu -> {
+                            showFilterDiaLog()
 
                         }
                     }
@@ -150,6 +159,54 @@ class MainFragment : Fragment() {
         memoList = MemoDAO.selectAllMemo(mainActivity)
         //RecyclerView를 갱신한다
         fragmentMainBinding.recyclerview.adapter?.notifyDataSetChanged()
+    }
+
+    //필터
+    fun showFilterDiaLog(){
+        var obj = MaterialAlertDialogBuilder(mainActivity)
+        obj.setTitle("필터 선택")
+
+        //항목
+        var itemArray = arrayOf("전체", "중요함", "중요하지 않음")
+        obj.setItems(itemArray){ dialogInterface: DialogInterface, i: Int ->
+            filterDiaLog = when(i){
+                0 -> showFilterDiaLog.FILTER_TYPE_ALL
+                1 -> showFilterDiaLog.FILTER_TYPE_IMPORTANT
+                2 -> showFilterDiaLog.FILTER_TYPE_NONIMPORTANT
+                else -> showFilterDiaLog.FILTER_TYPE_ALL
+            }
+            //데이터를 새로 담아줘라
+            setDiaLogEvent()
+
+            fragmentMainBinding.recyclerview.adapter?.notifyDataSetChanged()
+        }
+        obj.setPositiveButton("확인", null)
+        obj.show()
+    }
+
+    //다이알로그 만들기
+    fun setDiaLogEvent(){
+        //우선 다 비워준다
+        memoList.clear()
+        //타입별로 분기한다
+
+        when(filterDiaLog){
+            showFilterDiaLog.FILTER_TYPE_ALL -> {
+                memoList = MemoDAO.selectAllMemo(mainActivity)
+            }
+
+            showFilterDiaLog.FILTER_TYPE_IMPORTANT -> {
+                MemoDAO.selctOneMemo(mainActivity, Important.IMPORTANT_OK.num)
+
+
+            }
+            showFilterDiaLog.FILTER_TYPE_NONIMPORTANT -> {
+                MemoDAO.selctOneMemo(mainActivity, Important.IMPORTANT_NO.num)
+
+
+            }
+
+        }
     }
 
 

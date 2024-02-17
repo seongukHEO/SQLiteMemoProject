@@ -138,6 +138,15 @@ enum class FragmentName(var str:String){
 }
 
 enum class Important(var num:Int){
-    IMPORTANT_OK(0),
-    IMPORTANT_NO(1)
+    IMPORTANT_OK(1),
+    IMPORTANT_NO(2)
+}
+
+enum class showFilterDiaLog(var num:Int, var str:String){
+    //각 항목들을 작성해준다
+    FILTER_TYPE_ALL(0, "전체"),
+    FILTER_TYPE_IMPORTANT(1, "중요함"),
+    FILTER_TYPE_NONIMPORTANT(2, "중요하지 않음"),
+
+
 }
