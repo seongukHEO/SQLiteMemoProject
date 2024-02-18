@@ -22,6 +22,10 @@ class MainFragment : Fragment() {
     //정보를 담을 객체 생성
     lateinit var memoList:MutableList<Trip>
 
+    //여기서만 사용해보자
+    var memoListThis = mutableListOf<Trip>()
+    var memoListIndex = mutableListOf<Int>()
+
 
 
 
@@ -43,7 +47,10 @@ class MainFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        fragmentMainBinding.recyclerview.adapter?.notifyDataSetChanged()
+        fragmentMainBinding.apply {
+            setDiaLogEvent()
+            recyclerview.adapter?.notifyDataSetChanged()
+        }
     }
     //툴바 설정
     fun setToolBar(){
@@ -128,15 +135,16 @@ class MainFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return memoList.size
+            return memoListThis.size
         }
 
         override fun onBindViewHolder(holder: ViewHolderClass, position: Int) {
-            var memo = memoList[position]
+            var memo = memoListThis[position]
             Log.e("test123", "${memo.title}")
-            holder.rowMainBinding.resultTextView.text = "제목 : ${memoList[position].title}"
+            holder.rowMainBinding.resultTextView.text = "제목 : ${memoListThis[position].title}"
             when(memo.important){
-                0 -> holder.rowMainBinding.resultImage.setImageResource(R.drawable.star_hjhj)
+                1 -> holder.rowMainBinding.resultImage.setImageResource(R.drawable.star_hjhj)
+                2 -> holder.rowMainBinding.resultImage.setImageResource(R.drawable.star_gh)
             }
             //클릭했을떄
             holder.rowMainBinding.root.setOnClickListener {
@@ -145,7 +153,7 @@ class MainFragment : Fragment() {
 
                 //position번쨰 추출
                 var sheetBundle = Bundle()
-                sheetBundle.putInt("mainidx", memoList[position].idx)
+                sheetBundle.putInt("mainidx", memoListThis[position].idx)
                 bottomSheetFragment.arguments = sheetBundle
 
                 bottomSheetFragment.show(mainActivity.supportFragmentManager, "BottomSheet")
@@ -187,21 +195,35 @@ class MainFragment : Fragment() {
     //다이알로그 만들기
     fun setDiaLogEvent(){
         //우선 다 비워준다
-        memoList.clear()
+        memoListThis.clear()
+        memoListIndex.clear()
         //타입별로 분기한다
 
         when(filterDiaLog){
             showFilterDiaLog.FILTER_TYPE_ALL -> {
-                memoList = MemoDAO.selectAllMemo(mainActivity)
+                memoList.forEachIndexed { index, trip ->
+                    memoListThis.add(trip)
+                    memoListIndex.add(index)
+                }
             }
 
             showFilterDiaLog.FILTER_TYPE_IMPORTANT -> {
-                MemoDAO.selctOneMemo(mainActivity, Important.IMPORTANT_OK.num)
+                memoList.forEachIndexed { index, trip ->
+                    if (trip.important == Important.IMPORTANT_OK.num){
+                        memoListThis.add(trip)
+                        memoListIndex.add(index)
+                    }
+                }
 
 
             }
             showFilterDiaLog.FILTER_TYPE_NONIMPORTANT -> {
-                MemoDAO.selctOneMemo(mainActivity, Important.IMPORTANT_NO.num)
+                memoList.forEachIndexed { index, trip ->
+                    if (trip.important == Important.IMPORTANT_NO.num){
+                        memoListThis.add(trip)
+                        memoListIndex.add(index)
+                    }
+                }
 
 
             }
