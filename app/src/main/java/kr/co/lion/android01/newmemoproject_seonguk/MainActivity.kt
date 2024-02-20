@@ -115,6 +115,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // BackStack에서 Fragment를 제거한다.
+    //이걸 만들어 주어야 한다
+    //제거!
     fun removeFragment(name:FragmentName){
         SystemClock.sleep(200)
 
